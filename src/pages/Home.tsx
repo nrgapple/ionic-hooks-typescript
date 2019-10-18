@@ -17,11 +17,11 @@ import {
   IonTitle,
   IonToolbar,
   IonInput,
+  IonToast,
+  IonButton,
   } from '@ionic/react';
-import { book, build, colorFill, grid } from 'ionicons/icons';
 import React, { useState } from 'react';
 import './Home.css';
-import { userInfo } from 'os';
 import { InputChangeEventDetail } from '@ionic/core';
 
 interface IProps {
@@ -31,8 +31,10 @@ interface IProps {
 const HomePage: React.FC<IProps> = (props: IProps) => {
 
   const [username, setUsername] = useState('');
+  const [showUsernameChange, setShowUsernameChange] = useState(false);
   const handleUsernameValueChange = (event: CustomEvent<InputChangeEventDetail>) => {
     const username = event.detail.value;
+    console.log(`userchange: ${showUsernameChange}`);
     setUsername(username? username : '');
   }
 
@@ -47,6 +49,13 @@ const HomePage: React.FC<IProps> = (props: IProps) => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonToast 
+          isOpen={showUsernameChange}
+          onDidDismiss={() => setShowUsernameChange(false)}
+          duration={3000}
+          message={`User changed to ${username}`}
+          position="top"
+        />
         <IonCard className="welcome-card">
           <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" alt=""/>
           <IonCardHeader>
@@ -66,6 +75,7 @@ const HomePage: React.FC<IProps> = (props: IProps) => {
             <form onSubmit={(event) => {
               event.preventDefault();
               props.updateUser(username);
+              setShowUsernameChange(true);
             }}>
               <IonItem>
                 <IonLabel position="floating">username</IonLabel>
